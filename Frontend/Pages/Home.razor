@@ -1,0 +1,57 @@
+﻿@page "/"
+@inject IPostInterface _postInterface
+@inject IAuthInterface _authInterface
+@inject IUserInterface _userInterface
+@inject NavigationManager NavigationManager
+@using Frontend.Models.Posts
+@using Frontend.Services.Users
+
+<div class="container mx-auto py-8">
+    <button @onclick="addPost" class="btn btn-dark">Add Post</button>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var post in posts)
+        {
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden" @onclick="()=>showPost(post.Id)">
+                <img src="@post.ImageUrl" alt="Post Image" class="w-full h-64 object-cover transition-transform transform hover:scale-105 duration-300">
+                <div class="p-6">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">@post.Title</h2>
+                    <p class="text-gray-600 leading-relaxed mb-4">@post.Description</p>
+                    <div class="flex items-center mb-4">
+                        <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png" alt="User Avatar" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            @foreach (var user in users)
+                            {
+                                if (user.Id == post.UserId)
+                                {
+                                    <p class="text-gray-700 font-semibold">@user.UserName</p>
+                                }
+                            }
+                            <p class="text-gray-500 text-sm">@post.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<PostResponseDto> posts = new List<PostResponseDto>();
+    private List<UserDto> users = new List<UserDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await _postInterface.GetAllPostsAsync();
+        users = await _userInterface.GetAllUsersAsync();
+    }
+
+    private void addPost()
+    {
+        NavigationManager.NavigateTo("/create-post");
+    }
+
+    private void showPost(Guid id)
+    {
+        NavigationManager.NavigateTo($"/post/{id}");
+    }
+}

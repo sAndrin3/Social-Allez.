@@ -5,10 +5,8 @@ namespace Frontend.Services.comments
 {
     public interface ICommentInterface
     {
-        
-        Task<List<Comment>> GetAllComments();
-        
-        Task<ResponseDto> CreateComment(CommentRequestDto commentRequestDto);
+          Task<ResponseDto> AddCommentAsync(CommentRequestDto commentRequestDto);
+          Task<ResponseDto> DeleteCommentAsync(Guid id);
 
         
     }

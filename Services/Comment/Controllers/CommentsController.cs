@@ -51,7 +51,7 @@ namespace JituPost.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<ResponseDto>> AddComment(CommentRequestDto commentRequestDto)
         {
             try

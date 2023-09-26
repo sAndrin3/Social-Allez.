@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Frontend.Models.Posts;
 using Frontend.Models.Comments;
 
+
 namespace Frontend.Services.Posts
 {
     public interface IPostInterface
@@ -11,7 +12,7 @@ namespace Frontend.Services.Posts
         Task<List<PostDto>> GetAllPostsAsync();
         Task<PostDto> GetPostByIdAsync(Guid postId);
         Task<PostDto> AddPostAsync(PostRequestDto newPost);
-        Task<PostDto> UpdatePostAsync(Guid postId, PostRequestDto updatedPost);
+        Task<string> UpdatePostAsync(Guid id, PostRequestDto postRequestDto);
         Task<bool> DeletePostAsync(Guid postId);
         
         

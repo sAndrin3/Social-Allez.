@@ -49,7 +49,7 @@ namespace JituPost.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<ResponseDto>> AddPost(PostRequestDto postRequestDto)
         {
             try
@@ -102,7 +102,7 @@ namespace JituPost.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<ResponseDto>> UpdatePost(Guid id, PostRequestDto postRequestDto)
         {
             try
@@ -131,7 +131,7 @@ namespace JituPost.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<ResponseDto>> DeletePost(Guid id)
         {
             try

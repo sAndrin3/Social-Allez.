@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Frontend.Models.Posts;
 
 namespace Frontend.Models.Posts
 {
@@ -7,7 +8,7 @@ namespace Frontend.Models.Posts
         public Guid Id { get; set; }
         public string Title { get; set; }
 
-        public string Description { get; set; }
+        public string Content { get; set; }
 
         public string UserId { get; set; }
 
@@ -15,13 +16,7 @@ namespace Frontend.Models.Posts
 
         public string ImageUrl { get; set; }
         [NotMapped]
-        public List<CommentResponse> Comments { get; set; } = new List<CommentResponse>();
+        public List<CommentsDto> Comments { get; set; } = new List<CommentsDto>();
     }
 
-    public class CommentResponse
-    {
-        public string CommentText { get; set; }
-
-        public string UserId { get; set; }
-    }
 }

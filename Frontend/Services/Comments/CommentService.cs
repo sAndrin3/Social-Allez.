@@ -15,32 +15,38 @@ namespace Frontend.Services.comments
             _httpClient = httpClient;
         }
 
-        public async Task<ResponseDto> CreateComment(CommentRequestDto commentRequestDto)
+
+           public async Task<ResponseDto> AddCommentAsync(CommentRequestDto comment)
         {
-            var request = JsonConvert.SerializeObject(commentRequestDto);
-            var bodyContent = new StringContent(request, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{_baseUrl}/api/Comments", bodyContent);
+           var comments = new StringContent(JsonConvert.SerializeObject(comment), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync($"{_baseUrl}/api/Comment", comments);
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ResponseDto>(content);
-            if (result.Success)
+            var commentResponse = JsonConvert.DeserializeObject<ResponseDto>(content);
+            if (commentResponse.IsSuccess)
             {
-                return result;
+                return commentResponse;
             }
-            return new ResponseDto();
+            else
+            {
+                throw new Exception(commentResponse.Message);
+            }
         }
 
-        public async Task<List<Comment>> GetAllComments()
+         public async Task<ResponseDto> DeleteCommentAsync(Guid id)
         {
-            var comments = await _httpClient.GetAsync($"{_baseUrl}/api/Comments");
-            var content = await comments.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<ResponseDto>(content);
-            if (results.Success)
+           var deleteComment = _httpClient.DeleteAsync($"{_baseUrl}/api/Comment/{id}");
+           var content = await deleteComment.Result.Content.ReadAsStringAsync();
+            var commentResponse = JsonConvert.DeserializeObject<ResponseDto>(content);
+            if (commentResponse.IsSuccess)
             {
-                return JsonConvert.DeserializeObject<List<Comment>>(results.Data.ToString());
+                return commentResponse;          
             }
-            return new List<Comment>();
+            else
+            {
+                throw new Exception(commentResponse.Message);
+            }
+            
         }
-
 
     }
 }

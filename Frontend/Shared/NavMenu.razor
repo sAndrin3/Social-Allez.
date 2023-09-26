@@ -6,6 +6,7 @@
     <div class="flex-row p-2">
         <AuthorizeView>
                 <Authorized>
+                    <a href="" class="a text-white" style="text-decoration: none;">Home</a>
                     @* <a href="coupons" class="btn bg-black text-white">Coupon</a>
                     <a href="cart" class="btn bg-black text-white">Cart</a> *@
                 </Authorized>
@@ -15,6 +16,9 @@
     <div class="flex-row p-2">
         <AuthorizeView>
                 <Authorized>
+                   @* <li>
+                    <a href="#" class="text-white hover:underline">Home</a>
+                </li> *@
                     <button class="btn btn-danger" @onclick="logout">Logout</button>
                 </Authorized>
 

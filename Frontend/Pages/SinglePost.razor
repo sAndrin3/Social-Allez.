@@ -5,50 +5,51 @@
 @using Frontend.Services.comments
 @inject IPostInterface _postInterface
 @inject ICommentInterface _commentInterface
-@inject IUserInterface _userInterface
+@* @inject IUserInterface _userInterface *@
 @inject IAuthInterface _authInterface
 @inject NavigationManager NavigationManager
-@using Frontend.Services.Users
+@* @using Frontend.Services.Users *@
+@using System.Linq
 
-<div class="container mx-auto py-8">
-    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg">
-        <!-- Post Content -->
-        <div class="p-6">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-4">@post.Title</h2>
-            <img src="@post.ImageUrl" alt="Post Image" class="w-full h-64 object-cover rounded-lg mb-4">
-            <p class="text-gray-600 leading-relaxed mb-4">@post.Description</p>
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center">
-                    <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png" alt="User Avatar" class="w-12 h-12 rounded-full mr-4">
+<div class="container mx-auto py-5">
+    <div class="card mx-auto" style="max-width: 48rem;">
+      
+        <div class="card-body">
+            <h2 class="card-title h2">@post.Title</h2>
+            <img src="@post.ImageUrl" alt="Post Image" class="w-100 h-100 object-cover rounded-lg mb-4">
+            <p class="text-gray-600 leading-relaxed mb-4">@post.Content</p>
+            @* <p class="img">@post.ImageUrl</p> *@
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center">
+                    @* <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png" alt="User Avatar" class="w-12 h-12 rounded-full me-4"> *@
                     <div>
-                        @foreach(var user in users)
-                        {
-                            if (user.Id == post.UserId)
+                        @* @foreach (var user in users) *@
+                        @* {
+                            if (user.Id == Guid.Parse(post.UserId))
                             {
-                                <p class="text-gray-700 font-semibold">@user.UserName</p>
+                                <p class="text-gray-700 font-weight-bold">@user.UserName</p>
                             }
-                        }
-                        <p class="text-gray-500 text-sm">@post.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                        } *@
+                        <p class="text-gray-500 small">@post.CreatedAt.ToString("MMMM dd, yyyy")</p>
                     </div>
                 </div>
-                <div class="flex space-x-4">
-                    <button @onclick="(()=>EditPost(post.Id))" class="text-blue-500 hover:text-blue-700">
+                <div class="d-flex gap-3">
+                    <button @onclick="(()=>EditPost(post.Id))" class="btn btn-primary">
                         Edit
                     </button>
-                    <button @onclick="(()=>deletePost(post.Id))"  class="text-red-500 hover:text-red-700">
+                    <button @onclick="(()=>deletePost(post.Id))"  class="btn btn-danger">
                         Delete
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Comment Section -->
-        <div class="p-6 border-t border-gray-300">
-            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Comments</h3>
-            <!-- Add Comment Input -->
-            <div class="mt-4 flex items-center">
-                <input type="text" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500" placeholder="Add a comment..." @bind="comment.CommentText" />
-                <button @onclick="(()=>addComment(post.Id))" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full">Add</button>
+        <div class="card-body border-top border-gray-300">
+            <h3 class="card-title h2">Comments</h3>
+
+            <div class="mt-4 d-flex align-items-center">
+                <input type="text" class="form-control" placeholder="Add a comment..." @bind="comment.Content" />
+                <button @onclick="(()=>addComment(post.Id))" class="btn btn-primary ms-2">Add</button>
             </div>
 
             @if (post.Comments.Count() == 0)
@@ -60,22 +61,20 @@
                 @foreach (var comment in post.Comments)
                 {
                     <div class="mb-4">
-                        <div class="flex items-center">
-                            <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png" alt="User Avatar" class="w-10 h-10 rounded-full mr-4">
+                        <div class="d-flex align-items-center">
+                            @* <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png" alt="User Avatar" class="w-10 h-10 rounded-full me-4"> *@
                             <div>
-                                @foreach (var user in users)
+                                @* @foreach (var user in users)
                                 {
-                                    if (user.Id == comment.UserId)
+                                    if (user.Id == Guid.Parse(comment.UserId))
                                     {
-                                        <p class="text-gray-700 font-semibold">@user.UserName</p>
+                                        <p class="text-gray-700 font-weight-bold">@user.UserName</p>
                                     }
-                                }
-                                <p class="text-gray-600 leading-relaxed">@comment.CommentText</p>
-                                <div class="flex items-center mt-2">
-                                    <button class="text-red-500 hover:text-red-700">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
+                                } *@
+                                <p class="text-gray-600 leading-relaxed">@comment.content</p>
+                                <div class="d-flex align-items-center mt-2">
+                                    <button class="btn btn-danger">
+                                        X
                                     </button>
                                 </div>
                             </div>
@@ -89,15 +88,18 @@
 
 @code {
     private PostDto post { get; set; } = new PostDto();
-    private List<UserDto> users = new List<UserDto>();
+    @* private List<UserDto> users = new List<UserDto>(); *@
     [Parameter]
     public string postId { get; set; }
     public CommentRequestDto comment = new CommentRequestDto();
+      private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
+         comment = new CommentRequestDto();
         post = await _postInterface.GetPostByIdAsync(Guid.Parse(postId));
-        users = await _userInterface.GetAllUsersAsync();
+        @* users = await _userInterface.GetAllUsersAsync(); *@
+        Console.WriteLine(post);
     }
 
     public async Task deletePost(Guid postId)
@@ -107,17 +109,35 @@
 
     public void EditPost(Guid postId)
     {
-        NavigationManager.NavigateTo($"/EditPost/{postId}");
+        NavigationManager.NavigateTo($"/createpost/{postId}");
     }
 
-    public async Task addComment(Guid id)
+  public async Task addComment(Guid id)
+{
+    if (!string.IsNullOrWhiteSpace(comment.Content)) 
     {
         comment.PostId = id;
-        var res = await _commentInterface.AddCommentAsync(comment);
-        if (res != null)
+        try
         {
-            post = await _postInterface.GetPostByIdAsync(id);
-            comment = new CommentRequestDto(); // Clear the comment input
+            var res = await _commentInterface.AddCommentAsync(comment);
+
+            if (res != null && res.IsSuccess)
+            {
+               
+                post = await _postInterface.GetPostByIdAsync(id);
+                comment = new CommentRequestDto();
+            }
+            else
+            {
+                errorMessage = "Failed to add the comment. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while adding the comment. Please try again later.";
         }
     }
+}
+
+
 }

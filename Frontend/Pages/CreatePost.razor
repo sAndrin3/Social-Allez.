@@ -1,68 +1,119 @@
-@page "/create-post"
+@page "/createpost"
+@page "/createpost/{postId}"
 @using Frontend.Models.Posts
 @using Microsoft.AspNetCore.Components.Forms
 @inject IPostInterface _postInterface
 @inject NavigationManager NavigationManager
 
-<div class="container mx-auto py-8">
-    <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg">
-        <div class="p-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Create a Post</h2>
-            <EditForm Model="postModel" OnValidSubmit="HandlePostCreation">
+<div class="container mx-auto py-5">
+    <div class="card mx-auto" style="max-width: 30rem;">
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(postId))
+            {
+                <h2 class="card-title h2">Edit Post</h2>
+            }
+            else
+            {
+                <h2 class="card-title h2">Create Post</h2>
+            }
+
+            <EditForm Model="postModel" OnValidSubmit="HandlePostSubmission">
                 <DataAnnotationsValidator />
 
-                <div class="mb-4">
-                    <label for="title" class="text-gray-600">Title</label>
-                    <InputText type="text" id="title" class="form-input mt-1 w-full" @bind="postModel.Title" required />
+
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <InputText type="text" id="title" class="form-control" @bind-Value="postModel.Title"/>
                     <ValidationMessage For="@(() => postModel.Title)" />
                 </div>
 
-                <div class="mb-4">
-                    <label for="body" class="text-gray-600">Description</label>
-                    <textarea id="body" class="form-textarea mt-1 w-full" rows="4" @bind="postModel.Body" required></textarea>
-                    <ValidationMessage For="@(() => postModel.Body)" />
+                <div class="mb-3">
+                    <label for="body" class="form-label">Content</label>
+                    <InputTextArea id="body" class="form-control" rows="4" @bind-Value="postModel.Content"></InputTextArea>
+                    <ValidationMessage For="@(() => postModel.Content)" />
                 </div>
 
-                <div class="mb-6">
-                    <label for="image" class="text-gray-600">Image URL</label>
-                    <InputText type="url" id="image" class="form-input mt-1 w-full" @bind="postModel.ImageUrl" required />
+                <div class="mb-3">
+                    <label for="image" class="form-label">Image URL</label>
+                    <InputText type="text" id="image" class="form-control" @bind-Value="postModel.ImageUrl"/>
                     <ValidationMessage For="@(() => postModel.ImageUrl)" />
                 </div>
 
-                <div class="flex justify-end">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full">Create Post</button>
+                <div class="d-grid">
+                    @if (!string.IsNullOrEmpty(postId))
+                    {
+                        <button type="submit" class="btn btn-primary">Update Post</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary">Create Post</button>
+                    }
                 </div>
             </EditForm>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger mt-3" role="alert">
+                    @errorMessage
+                </div>
+            }
         </div>
     </div>
 </div>
 
 @code {
     private PostRequestDto postModel = new PostRequestDto();
+    private string errorMessage;
+  
 
-  public async Task HandlePostCreation()
+    [Parameter]
+    public string postId { get; set; }
+
+  protected override async Task OnParametersSetAsync()
 {
-    // Call the service method to create the post
-    var result = await _postInterface.AddPostAsync(postModel);
-
-    if (result != null)
+    if (!string.IsNullOrEmpty(postId))
     {
-        // Post creation successful, navigate to the home page or another page as needed
-        NavigationManager.NavigateTo("/");
-    }
-    else
-    {
-        // Handle error if post creation fails
-        // You can display an error message to the user
-
-        // For example, you can set an error message to display in the UI
-        errorMessage = "Failed to create the post. Please try again.";
-
-        // Optionally, you can log the error or perform other error handling tasks
-
-        // You can also clear the error message after a certain time or when the user dismisses it
+        var existingPost = await _postInterface.GetPostByIdAsync(Guid.Parse(postId));
+        if (existingPost != null)
+        {
+            // Populate the form fields with existing post data
+            postModel.Title = existingPost.Title;
+            postModel.Content = existingPost.Content;
+            postModel.ImageUrl = existingPost.ImageUrl;
+        }
     }
 }
 
-    }
 
+    public async Task HandlePostSubmission()
+    {
+        if (!string.IsNullOrEmpty(postId))
+        {
+            // Update an existing post
+            var result = await _postInterface.UpdatePostAsync(Guid.Parse(postId), postModel);
+
+            if (result != null)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = "Failed to update the post. Please try again.";
+            }
+        }
+        else
+        {
+            // Create a new post
+            var result = await _postInterface.AddPostAsync(postModel);
+
+            if (result != null)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = "Failed to create the post. Please try again.";
+            }
+        }
+    }
+}

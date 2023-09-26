@@ -4,6 +4,6 @@ namespace Frontend.Models.Comments
     {
         public Guid PostId { get; set; }
       
-        public string CommentText { get; set; } = "";
+        public string Content { get; set; } = "";
     }
 }

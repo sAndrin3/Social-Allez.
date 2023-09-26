@@ -11,6 +11,7 @@ public class ThePost
     public string Content { get; set; } = string.Empty;
     public Guid UserId { get; set; } // Foreign key to identify the user who created the post
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public string ImageUrl { get; set; }
 
     [NotMapped]
     public IEnumerable<CommentsDto> Comments { get; set; } = new List<CommentsDto>();

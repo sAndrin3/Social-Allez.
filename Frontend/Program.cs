@@ -1,7 +1,8 @@
 using Blazored.LocalStorage;
 using Frontend.Services.Auth;
-using Frontend.Services.Users;
+// using Frontend.Services.Users;
 using Frontend.Services.Posts;
+using Frontend.Services.comments;
 using Frontend.Services.AuthProvider;
 using Frontend.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -21,7 +22,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
             builder.Services.AddScoped<IAuthInterface, AuthService>();
             builder.Services.AddScoped<IPostInterface, PostService>();
-            builder.Services.AddScoped<IUserInterface, UserService>();
+            builder.Services.AddScoped<ICommentInterface, CommentsService>();
+            // builder.Services.AddScoped<IUserInterface, UserService>();
 
             // Authprovider configuration
             builder.Services.AddOptions();

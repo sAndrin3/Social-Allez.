@@ -1,0 +1,64 @@
+{
+    "Routes": [
+        // Post
+        {
+        "DownstreamPathTemplate": "/api/Post",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "localhost",
+                "Port": 5069
+            }
+        ],
+        "UpstreamPathTemplate": "/api/Post",
+        "UpstreamHttpMethod": [ "Post", "Get" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Post/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5069
+                }
+            ],
+            "UpstreamPathTemplate": "/api/Post/{id}",
+            "UpstreamHttpMethod": [ "Delete", "Get", "Put" ]
+            },
+
+            // Comment
+            {
+                "DownstreamPathTemplate": "/api/Comment",
+                "DownstreamScheme": "http",
+                "DownstreamHostAndPorts": [
+                    {
+                        "Host": "localhost",
+                        "Port": 5009
+                    }
+                ],
+                "UpstreamPathTemplate": "/api/Comment",
+                "UpstreamHttpMethod": ["Post"],
+                "AuthenticationOptions": {
+                    "AuthenticationProviderKey": "Bearer"
+                }
+            },
+            {
+                "DownstreamPathTemplate": "/api/Comment/{id}",
+                "DownstreamScheme": "http",
+                "DownstreamHostAndPorts": [
+                    {
+                        "Host": "localhost",
+                        "Port": 5009
+                    }
+                ],
+                "UpstreamPathTemplate": "/api/Comment/{id}",
+                "UpstreamHttpMethod": ["Delete"],
+                "AuthenticationOptions": {
+                    "AuthenticationProviderKey": "Bearer"
+                }
+            }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:7777"
+    }
+}

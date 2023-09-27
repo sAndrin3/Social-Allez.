@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "wDw7eN+rfvKQQHHAU0klzn/W1Z2PX1bMh1XvyaF0Ow8=",
+  "Source": "PostGateway",
+  "BasePath": "_content/PostGateway",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

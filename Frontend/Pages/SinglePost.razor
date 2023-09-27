@@ -13,7 +13,7 @@
 
 <div class="container mx-auto py-5">
     <div class="card mx-auto" style="max-width: 48rem;">
-      
+
         <div class="card-body">
             <h2 class="card-title h2">@post.Title</h2>
             <img src="@post.ImageUrl" alt="Post Image" class="w-100 h-100 object-cover rounded-lg mb-4">
@@ -21,14 +21,15 @@
             @* <p class="img">@post.ImageUrl</p> *@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="d-flex align-items-center">
-                    @* <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png" alt="User Avatar" class="w-12 h-12 rounded-full me-4"> *@
+                    @* <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png" alt="User Avatar"
+                    class="w-12 h-12 rounded-full me-4"> *@
                     <div>
                         @* @foreach (var user in users) *@
                         @* {
-                            if (user.Id == Guid.Parse(post.UserId))
-                            {
-                                <p class="text-gray-700 font-weight-bold">@user.UserName</p>
-                            }
+                        if (user.Id == Guid.Parse(post.UserId))
+                        {
+                        <p class="text-gray-700 font-weight-bold">@user.UserName</p>
+                        }
                         } *@
                         <p class="text-gray-500 small">@post.CreatedAt.ToString("MMMM dd, yyyy")</p>
                     </div>
@@ -37,7 +38,7 @@
                     <button @onclick="(()=>EditPost(post.Id))" class="btn btn-primary">
                         Edit
                     </button>
-                    <button @onclick="(()=>deletePost(post.Id))"  class="btn btn-danger">
+                    <button @onclick="(()=>deletePost(post.Id))" class="btn btn-danger">
                         Delete
                     </button>
                 </div>
@@ -62,18 +63,19 @@
                 {
                     <div class="mb-4">
                         <div class="d-flex align-items-center">
-                            @* <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png" alt="User Avatar" class="w-10 h-10 rounded-full me-4"> *@
+                            @* <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png" alt="User Avatar"
+                    class="w-10 h-10 rounded-full me-4"> *@
                             <div>
                                 @* @foreach (var user in users)
-                                {
-                                    if (user.Id == Guid.Parse(comment.UserId))
-                                    {
-                                        <p class="text-gray-700 font-weight-bold">@user.UserName</p>
-                                    }
-                                } *@
+                        {
+                        if (user.Id == Guid.Parse(comment.UserId))
+                        {
+                        <p class="text-gray-700 font-weight-bold">@user.UserName</p>
+                        }
+                        } *@
                                 <p class="text-gray-600 leading-relaxed">@comment.content</p>
                                 <div class="d-flex align-items-center mt-2">
-                                    <button class="btn btn-danger">
+                                    <button @onclick="(()=>deleteComment(comment.id))" class="btn btn-danger">
                                         X
                                     </button>
                                 </div>
@@ -92,11 +94,11 @@
     [Parameter]
     public string postId { get; set; }
     public CommentRequestDto comment = new CommentRequestDto();
-      private string errorMessage;
+    private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-         comment = new CommentRequestDto();
+        comment = new CommentRequestDto();
         post = await _postInterface.GetPostByIdAsync(Guid.Parse(postId));
         @* users = await _userInterface.GetAllUsersAsync(); *@
         Console.WriteLine(post);
@@ -112,32 +114,38 @@
         NavigationManager.NavigateTo($"/createpost/{postId}");
     }
 
-  public async Task addComment(Guid id)
-{
-    if (!string.IsNullOrWhiteSpace(comment.Content)) 
+    public async Task addComment(Guid id)
     {
-        comment.PostId = id;
-        try
+        if (!string.IsNullOrWhiteSpace(comment.Content))
         {
-            var res = await _commentInterface.AddCommentAsync(comment);
+            comment.PostId = id;
+            try
+            {
+                var res = await _commentInterface.AddCommentAsync(comment);
 
-            if (res != null && res.IsSuccess)
-            {
-               
-                post = await _postInterface.GetPostByIdAsync(id);
-                comment = new CommentRequestDto();
+                if (res != null && res.IsSuccess)
+                {
+
+                    post = await _postInterface.GetPostByIdAsync(id);
+                    comment = new CommentRequestDto();
+                }
+                else
+                {
+                    errorMessage = "Failed to add the comment. Please try again.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                errorMessage = "Failed to add the comment. Please try again.";
+                errorMessage = "An error occurred while adding the comment. Please try again later.";
             }
         }
-        catch (Exception ex)
-        {
-            errorMessage = "An error occurred while adding the comment. Please try again later.";
-        }
+
+
     }
-}
+    public async Task deleteComment(Guid id)
+    {
+        await _commentInterface.DeleteCommentAsync(id);
+    }
 
 
 }

@@ -14,7 +14,7 @@ namespace Frontend.Services.Posts
     public class PostService : IPostInterface
     {
         private readonly HttpClient _httpClient;
-        private readonly string _baseUrl = "http://localhost:5069"; 
+        private readonly string _baseUrl = "http://localhost:7777"; 
 
         public PostService(HttpClient httpClient)
         {

@@ -8,7 +8,7 @@ namespace Frontend.Services.comments
     public class CommentsService : ICommentInterface
     {
         private readonly HttpClient _httpClient;
-        private readonly string _baseUrl = "http://localhost:5009";
+        private readonly string _baseUrl = "http://localhost:7777";
 
         public CommentsService(HttpClient httpClient)
         {
@@ -16,9 +16,9 @@ namespace Frontend.Services.comments
         }
 
 
-           public async Task<ResponseDto> AddCommentAsync(CommentRequestDto comment)
+        public async Task<ResponseDto> AddCommentAsync(CommentRequestDto comment)
         {
-           var comments = new StringContent(JsonConvert.SerializeObject(comment), Encoding.UTF8, "application/json");
+            var comments = new StringContent(JsonConvert.SerializeObject(comment), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync($"{_baseUrl}/api/Comment", comments);
             var content = await response.Content.ReadAsStringAsync();
             var commentResponse = JsonConvert.DeserializeObject<ResponseDto>(content);
@@ -32,21 +32,22 @@ namespace Frontend.Services.comments
             }
         }
 
-         public async Task<ResponseDto> DeleteCommentAsync(Guid id)
+        public async Task<ResponseDto> DeleteCommentAsync(Guid id)
         {
-           var deleteComment = _httpClient.DeleteAsync($"{_baseUrl}/api/Comment/{id}");
-           var content = await deleteComment.Result.Content.ReadAsStringAsync();
-            var commentResponse = JsonConvert.DeserializeObject<ResponseDto>(content);
-            if (commentResponse.IsSuccess)
+            var response = await _httpClient.DeleteAsync($"{_baseUrl}/api/Comment/{id}");
+
+            if (response.IsSuccessStatusCode)
             {
-                return commentResponse;          
+                var content = await response.Content.ReadAsStringAsync();
+                var commentResponse = JsonConvert.DeserializeObject<ResponseDto>(content);
+                return commentResponse;
             }
             else
             {
-                throw new Exception(commentResponse.Message);
+                throw new Exception($"Failed to delete comment. Status code: {response.StatusCode}");
             }
-            
         }
+
 
     }
 }

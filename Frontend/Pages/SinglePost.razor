@@ -107,6 +107,7 @@
     public async Task deletePost(Guid postId)
     {
         await _postInterface.DeletePostAsync(postId);
+        NavigationManager.NavigateTo($"");
     }
 
     public void EditPost(Guid postId)
@@ -145,6 +146,7 @@
     public async Task deleteComment(Guid id)
     {
         await _commentInterface.DeleteCommentAsync(id);
+        post = await _postInterface.GetPostByIdAsync(Guid.Parse(postId));
     }
 
 
